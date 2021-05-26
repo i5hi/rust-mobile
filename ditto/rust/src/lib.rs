@@ -188,27 +188,6 @@ pub extern "C" fn sign_solo_psbt(
     CString::new(result).unwrap().into_raw()
 }
 
-#[no_mangle]
-pub extern "C" fn get_address(descriptor: *const c_char) -> *mut c_char {
-    let descriptor_cstr = unsafe { CStr::from_ptr(descriptor) };
-    let descriptor: &str = match descriptor_cstr.to_str() {
-        Err(_) => return CString::new("Descriptor Error").unwrap().into_raw(),
-        Ok(string) => &string,
-    };
-    
-    // get priv key from descriptor and extract the network
-    let wallet = Wallet::new_offline(
-        descriptor,
-        Some(descriptor),
-        bitcoin::Network::Testnet,
-        MemoryDatabase::default(),
-    )
-    .unwrap();
-
-    let result = wallet.get_new_address().unwrap().to_string();
-    CString::new(result).unwrap().into_raw()
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -270,17 +249,6 @@ mod tests {
         };
         assert_eq!(signed, expected);
 
-        let descriptor ="wpkh([ecf2c469/84h/1h/0h]tprv8fycmZ5gxLRvYG84dkGsa9Uks45SNTPZxJcWx5hY3owexdKwzRnqPkVoqb3s4iTcKgiMcoXQB9tJjWM5WSodZspH3j3xZeefsoyfuUX1bp8/0/0)";
-        let descriptor_cstr = CString::new(descriptor).unwrap().into_raw();
-        let expected_address = "tb1qevuuuwu4zdkfjw8q8ur9yewzjvmdlffjjj8tmf";
-        let address = get_address(descriptor_cstr);
-        let address_cstr = unsafe { CStr::from_ptr(address) };
-        let address: &str = match address_cstr.to_str() {
-            Err(_) => "Error",
-            Ok(string) => &string,
-        };
-        print!("{}",address);
-        assert_eq!(address, expected_address);
 
     }
 }
