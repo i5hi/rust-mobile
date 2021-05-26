@@ -22,10 +22,7 @@ This example is only tested on linux but the logic is cross platform
 ```bash
 # Install rust toolchain
 curl https://sh.rustup.rs -sSf | sh
-
-# add toolchains for specific build targets
-rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
-
+cargo --version
 ```
 #### Android ndk
 
@@ -56,6 +53,33 @@ Once you confirm the ndk is at the given path and that the bin folder contains a
 ```
 export PATH=$PATH:$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin
 ```
+
+It is safe to explicitly specify which specific linker to use per build target. 
+
+Add the following to your global cargo config @ `$HOME/.cargo/config` to point to the correct linker for each build target
+
+```toml
+[target.aarch64-linux-android]
+ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-ar"
+linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang"
+
+[target.armv7-linux-androideabi]
+ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ar"
+linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi29-clang"
+
+[target.i686-linux-android]
+ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android-ar"
+linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android29-clang"
+```
+
+Finally, add toolchains for our build targets
+
+```bash
+rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
+```
+> NOTE:
+
+In the `aarch64-linux-android` target, we used `aarch64-linux-android29-clang`, this can change based on the version you have. Inspect your bin to see which versions are available and pick accordingly.
 
 
 ### Write Rust Function With C Binding
@@ -165,26 +189,6 @@ test tests::test_mnemonic ... ok
 ```
 
 ### Compile for Android Build Target
-
-Add the following to your global cargo config @ `$HOME/.cargo/config` to point to the correct linker for each build target
-
-```toml
-[target.aarch64-linux-android]
-ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-ar"
-linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang"
-
-[target.armv7-linux-androideabi]
-ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/arm-linux-androideabi-ar"
-linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi29-clang"
-
-[target.i686-linux-android]
-ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android-ar"
-linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android29-clang"
-```
-
-> NOTE:
-
-In the `aarch64-linux-android` target, we used `aarch64-linux-android29-clang`, this can change based on the version you have. Inspect your bin to see which versions are available and pick accordingly.
 
 
 ```bash
