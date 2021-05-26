@@ -81,7 +81,7 @@ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-andro
 ```
 > NOTE:
 
-In the `aarch64-linux-android` target, we used `aarch64-linux-android29-clang`, this can change based on the version you have. Inspect your bin to see which versions are available and pick accordingly.
+The linker for all targets are named slightly differently from their target name, eg: target: `aarch64-linux-android` has linker:`aarch64-linux-android29-clang`, this can change based on the version you have. Inspect your bin to see which versions are available and pick accordingly per linker.
 
 
 ### Write Rust Function With C Binding
