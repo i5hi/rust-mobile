@@ -174,7 +174,7 @@ pub extern "C" fn sign_solo_psbt(
     let wallet = Wallet::new_offline(
         &desc_deposit,
         Some(&desc_change),
-        bitcoin::Network::Testnet,
+        network,
         MemoryDatabase::default(),
     )
     .unwrap();
