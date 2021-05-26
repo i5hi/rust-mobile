@@ -1,1 +1,3 @@
-ditto/target
+ditto/rust/target
+ditto/.dart_tool
+ditto/.packages
