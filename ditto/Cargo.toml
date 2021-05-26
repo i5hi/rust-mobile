@@ -1,0 +1,13 @@
+[package]
+name = "ditto"
+version = "0.1.0"
+authors = ["Vishal Menon <vishalmenon.92@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "ditto"
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+rand = "0.6.0"
+bip39 = "1.0.1"

@@ -86,6 +86,7 @@ The linker for all targets are named slightly differently from their target name
 
 ### Write Rust Function With C Binding
 
+
 ```bash
 cargo new --lib ditto && cd ditto
 nano Cargo.toml
