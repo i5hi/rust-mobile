@@ -1,6 +1,6 @@
 # Rust-C-Dart FFI
 
-The goal of this guide is to provide a process for using Rust code in Dart projects for Android and iOS build targets via C ffi. 
+The goal of this guide is to provide a process for using Rust code in Dart projects for Android and iOS build targets via C ffi.
 
 ## Part 1: FFI Intro & Build targets for Android
 
@@ -68,12 +68,16 @@ linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-
 [target.i686-linux-android]
 ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android-ar"
 linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android29-clang"
+
+[target.x86_64-linux-android]
+ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ar"
+linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android29-clang"
 ```
 
 Finally, add toolchains for our build targets
 
 ```bash
-rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
+rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android
 ```
 > NOTE:
 
@@ -99,7 +103,6 @@ crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 rand = "0.6.0"
-secp256k1 = {version = "0.20.1", features = ["rand"]}
 bip39 = "1.0.1"
 
 ```
@@ -116,9 +119,7 @@ Considering the conversions to and from CStrings as boiler plate; you can use an
 
 It makes sense to create your own custom use cases of specific libraries by just wrapping its usage into a purely `CString` interface.
 
-We are using secp256k1 to help us generate strong randomness and bip39 to create a menmonic bitcoin seed phrase.
-
-Instead of depending on these libraries to provide ffi support out of the box, we can create our own custom use cases that combines libraries and finally wraps IO as a `CString`.
+We are using rand and bip39 to create a menmonic bitcoin seed phrase.
 
 Notice that just as the function `mnemonic` converts the `length` input CString input into a native rust type `len`, in `test_mnemonic`,the output `mnemonic_ptr` of the function `mnemonic` is converted into a native rust type `mnemonic_native`. When working with `CString` on the input side, we use an `unsafe` block to extract the value from a pointer* which could potentially be a null and break rust rules.
 
@@ -129,7 +130,7 @@ Once you get around the verbosity of it, its not all that intense.
 use std::os::raw::{c_char};
 use std::ffi::{CString,CStr};
 
-use secp256k1::rand::rngs::OsRng;
+use rand::rngs::OsRng;
 use bip39::{Language, Mnemonic};
 
 #[no_mangle]
@@ -186,8 +187,9 @@ test tests::test_mnemonic ... ok
 
 ```
 
-### Compile for Android Build Target
+### Build for Android Target
 
+cargo can compile binaries for specific target hardware. Check the list of [Supported Platforms](https://doc.rust-lang.org/nightly/rustc/platform-support.html). Our targets are all under Tier 2.
 
 ```bash
 cd path/to/project
@@ -195,6 +197,7 @@ cargo clean
 cargo build --target aarch64-linux-android --release
 cargo build --target armv7-linux-androideabi --release
 cargo build --target i686-linux-android --release
+cargo build --target x86_64-linux-android --release
 
 ```
 
