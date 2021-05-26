@@ -1,10 +1,13 @@
-# Rust-C-Dart ffi 
+# Rust-C-Dart FFI
 
-The goal of this guide is to provide a process for using Rust code in Dart projects for Android and iOS build targets. 
+The goal of this guide is to provide a process for using Rust code in Dart projects for Android and iOS build targets via C ffi. 
 
 ## Part 1: FFI Intro & Build targets for Android
 
-This is an example of how to create C bindings for Rust functions and compiling them for Android targets.
+This part covers 
+
+- how to create C bindings for a custom rust lib
+- compiling the lib for use on Android targets
 
 This example is only tested on linux but the logic is cross platform
 
@@ -28,7 +31,7 @@ rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-andro
 
 The NDK contains all the tools required to help us build our rust functions for android targetted hardware.
 
-The quickest way to get the ndk in a platform independent way is via Android Studio. 
+The quickest way to get the ndk is via Android Studio. 
 
 Follow the instructions at [Android Studio](https://developer.android.com/studio).
 
@@ -38,7 +41,7 @@ Find the SDK Manager as an icon on the top right of the screen, OR navigate to `
 
 Here you can chose to install the Android NDK.
 
-Take note of the installation path and inspect it on the terminal:
+<b>Take note of the installation path and inspect it on the terminal:</b>
 
 ```
 ls $HOME/Android/Sdk/ndk
@@ -48,7 +51,7 @@ ls $HOME/Android/Sdk/ndk
 ls $HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin
 ```
 
-Once you confirm the ndk is at the given path and that the bin folder contains a bunch of binaries, add the path to your `PATH` variable for cargo.
+Once you confirm the ndk is at the given path and that the bin folder contains a bunch of binaries, add this path to your `PATH` variable for cargo.
 
 ```
 export PATH=$PATH:$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin
@@ -57,10 +60,8 @@ export PATH=$PATH:$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuil
 
 ### Write Rust Function With C Binding
 
-Create a new library that will wrap our rust function into a C compatible function. 
-
 ```bash
-cargo new ditto && cd ditto
+cargo new --lib ditto && cd ditto
 nano Cargo.toml
 ```
 ```toml
@@ -97,7 +98,7 @@ We are using secp256k1 to help us generate strong randomness and bip39 to create
 
 Instead of relying on these libraries to provide ffi support out of the box, we can create our own custom use cases that combines libraries and finally wraps IO as a `CString`.
 
-Notice that just as the function `mnemonic` converts the `length` input CString input into a native rust type `len`, in `test_mnemonic`,the output `mnemonic_ptr` of the function `mnemonic` is converted into a native rust type `mnemonic_native`. When working with `CStrings` on the input side, we use an `unsafe` block to extract the value from a pointer* which could potentially be a null and break rust rules.
+Notice that just as the function `mnemonic` converts the `length` input CString input into a native rust type `len`, in `test_mnemonic`,the output `mnemonic_ptr` of the function `mnemonic` is converted into a native rust type `mnemonic_native`. When working with `CString` on the input side, we use an `unsafe` block to extract the value from a pointer* which could potentially be a null and break rust rules.
 
 Once you get around the verbosity of it, its not all that intense.
 
@@ -210,7 +211,11 @@ Check if you have the correct linker binaries by running them manually:
 $HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang --version
 ```
 
+
 ## Part 2: Using Android builds with Dart-C FFI
+
+In the next part, we will call this C library via Dart on an Android device. 
+
 ## Part 3: Build Targets for iOS
 ## Part 4: Using iOS builds with Dart-C FFI
 ## Part 5: Automating for easier development
