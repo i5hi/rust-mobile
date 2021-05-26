@@ -1,5 +1,9 @@
 # dart
 
+This root directory contains the dart project files, with `rust` as a subdirectory being used as a library.
+
+Dart uses `bin` as the conventional directory to store `.dart` files. 
+
 ## Installation on Linux
 
 ```bash
@@ -18,9 +22,7 @@
 
 # Test
 
-Ensure that you have correctly built binaries in the `rust` folders based on the tutorial in `../docs/part1.md`
-
-Dart uses /bin as the conventional folder to store `.dart` files. 
+Ensure that you have correctly built binaries in the `rust/target/release` directory based on the tutorial in `../docs/part1.md`
 
 In this root directory containing `pubspec.yaml` run 
 
