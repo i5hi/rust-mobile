@@ -1,0 +1,25 @@
+name: ditto
+description: A dart project that uses C FFI to use Rust functions
+version: 0.1.0
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+   path: any
+   ffi: ^1.0.0
+
+dev_dependencies:
+  #pedantic: ^1.10.0
+  test: any
+  #ffigen: ^1.2.0
+
+
+
+#ffigen:
+#  output: lib/bindings.dart
+#  headers:
+#    entry-points:
+#    - rust/target/bindings.h
+#  name: GreeterBindings
+#  description: Dart bindings to call mylib functions

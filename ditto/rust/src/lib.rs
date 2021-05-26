@@ -1,24 +1,21 @@
 use std::os::raw::{c_char};
 use std::ffi::{CString,CStr};
 
-use rand::rngs::OsRng;
 use bip39::{Language, Mnemonic};
 
 #[no_mangle]
 pub extern fn mnemonic(length: *const c_char) -> *mut c_char {
-    // convert from CString inputs
     let input_cstr = unsafe {CStr::from_ptr(length)};
     let len:usize = match input_cstr.to_str(){
         Err(_) => 12,
         Ok(string)=> string.parse::<usize>().unwrap()
     };
-    // regular rust code
-    let mut rng = OsRng::new().expect("!!OsRng Error!!");
+
+    let mut rng = rand::rngs::OsRng::new().expect("!!OsRng Error!!");
     let mnemonic = Mnemonic::generate_in_with(&mut rng, Language::English, len)
         .unwrap()
         .to_string();
 
-    // convert to CString outputs
     CString::new(mnemonic).unwrap().into_raw()
 
 }

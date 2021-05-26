@@ -72,6 +72,7 @@ linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-
 [target.x86_64-linux-android]
 ar = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android-ar"
 linker = "$HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin/x86_64-linux-android29-clang"
+
 ```
 
 Finally, add toolchains for our build targets
@@ -196,6 +197,7 @@ cargo can compile binaries for specific target hardware. Check the list of [Supp
 ```bash
 cd path/to/project
 cargo clean
+cargo build --release
 cargo build --target aarch64-linux-android --release
 cargo build --target armv7-linux-androideabi --release
 cargo build --target i686-linux-android --release
@@ -203,6 +205,7 @@ cargo build --target x86_64-linux-android --release
 
 ```
 
+### Compile c 
 ## Debugging tips
 
 Incase you bump into errors along the way, before rebuilding clean up any artifacts from previous builds.
