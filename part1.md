@@ -86,6 +86,7 @@ The linker for all targets are named slightly differently from their target name
 
 ### Write Rust Function With C Binding
 
+> NOTE: For this part you can either use the tutorial below and DIY (recommended) |OR| you can pull this repo which has ditto already configured. If using the repo then jump to the last Test and Build steps. The repo will always contain new code and may become large. The tutorial below is best to start as it is minimal, has less dependencies therefore will build faster and get you to a proof of concept faster.
 
 ```bash
 cargo new --lib ditto && cd ditto
