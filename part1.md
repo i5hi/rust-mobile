@@ -26,11 +26,9 @@ cargo --version
 ```
 #### Android ndk
 
-The NDK contains all the tools required to help us build our rust functions for android targetted hardware.
+The NDK contains all the tools required to help us build our rust based C library for android targetted hardware.
 
-The quickest way to get the ndk is via Android Studio. 
-
-Follow the instructions at [Android Studio](https://developer.android.com/studio).
+The quickest way to get the ndk is via [Android Studio](https://developer.android.com/studio).
 
 Once Android studio is installed, setup a new project to get into the IDE. 
 
@@ -118,9 +116,9 @@ Considering the conversions to and from CStrings as boiler plate; you can use an
 
 It makes sense to create your own custom use cases of specific libraries by just wrapping its usage into a purely `CString` interface.
 
-We are using secp256k1 to help us generate strong randomness and bip39 to create a menmonic bitcoin seed.
+We are using secp256k1 to help us generate strong randomness and bip39 to create a menmonic bitcoin seed phrase.
 
-Instead of relying on these libraries to provide ffi support out of the box, we can create our own custom use cases that combines libraries and finally wraps IO as a `CString`.
+Instead of depending on these libraries to provide ffi support out of the box, we can create our own custom use cases that combines libraries and finally wraps IO as a `CString`.
 
 Notice that just as the function `mnemonic` converts the `length` input CString input into a native rust type `len`, in `test_mnemonic`,the output `mnemonic_ptr` of the function `mnemonic` is converted into a native rust type `mnemonic_native`. When working with `CString` on the input side, we use an `unsafe` block to extract the value from a pointer* which could potentially be a null and break rust rules.
 
@@ -221,5 +219,13 @@ $HOME/Android/Sdk/ndk/<version_number>/toolchains/llvm/prebuilt/linux-x86_64/bin
 In the next part, we will call this C library via Dart on an Android device. 
 
 ## Part 3: Build Targets for iOS
+
+Then we will build the same library for iOS target
+
 ## Part 4: Using iOS builds with Dart-C FFI
+
+Then we will call this C library via Dart on an iOS device.
+
 ## Part 5: Automating for easier development
+
+Finally, we will create a script to facilitate continous development.
